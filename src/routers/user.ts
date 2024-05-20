@@ -1,27 +1,16 @@
 import express, { Request, Response } from 'express';
 import { User } from '../models/user';
+import { createNewUser } from '../modules/user/createNewUser';
 
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-        // Get the user data from the request body
-        const { firstName, lastName, email, password, brokerLicenseNumber } = req.body;
 
-        // TODO: Validate the user data
+        // TODO: @willdunk: Auth this user
+        // TODO: @willdunk: Validate this body input
+        await createNewUser(req.body);
 
-        // TODO: Create the user in the database
-
-        await User.create({
-            firstName,
-            lastName,
-            email,
-            passwordHash: password,
-            refreshTokenHashes: { refreshTokenHash: 'asdf', expiresOn: new Date() },
-            brokerLicenseNumber
-        });
-
-        // Send a response indicating success
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
         console.error(error);
@@ -29,11 +18,8 @@ router.post('/', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/', (req: Request, res: Response) => {
-    // Get all users from the database
-    const users = User.find();
-
-    // Send the users as a response
+router.get('/', async (req: Request, res: Response) => {
+    const users = await User.find().lean().exec();
     res.json(users);
 });
 
