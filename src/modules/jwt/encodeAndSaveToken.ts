@@ -1,6 +1,7 @@
 
 import { type RefreshToken, User } from '../../models/user';
 import { hash } from '../../utils/hash';
+import { REFRESH_DAYS_EXPIRATION } from './constants';
 import { encode } from './encode';
 import { Tokens } from './types';
 

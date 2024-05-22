@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { JWTBody, Tokens } from "./types";
 import { secrets, secretsMap } from './secrets';
+import { ACCESS_MINUTES_EXPIRATION, REFRESH_DAYS_EXPIRATION } from './constants';
 
 export const encode = (userId: string): Tokens => {
     const body: JWTBody = { userId };
