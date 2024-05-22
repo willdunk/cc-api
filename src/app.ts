@@ -4,6 +4,14 @@ import usersRouter from './routers/user';
 import loginRouter from './routers/login';
 import bodyParser from 'body-parser';
 
+declare global {
+    namespace Express {
+        interface Request {
+            userId?: string
+        }
+    }
+}
+
 const port = 3000;
 
 const main = async () => {
