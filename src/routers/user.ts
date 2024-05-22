@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { User } from '../models/user';
 import { createNewUser } from '../modules/user/createNewUser';
-import { PostUserInputSchema } from '../schemas/user/PostuserInputSchema';
+import { PostUserInputSchema } from '../schemas/user/PostUserInputSchema';
 
 const router = express.Router();
 

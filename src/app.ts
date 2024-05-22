@@ -1,6 +1,7 @@
 import { connectDB } from './config/db';
 import express from 'express';
 import usersRouter from './routers/user';
+import loginRouter from './routers/login';
 import bodyParser from 'body-parser';
 
 const port = 3000;
@@ -14,10 +15,10 @@ const main = async () => {
         console.log("Created express app");
 
         let jsonParser = bodyParser.json();
-
         app.use(jsonParser);
 
         app.use('/users', usersRouter);
+        app.use('/login', loginRouter);
 
         app.listen(port, () => {
             console.log(`Server running on port ${port}`);
