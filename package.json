@@ -22,7 +22,8 @@
         "mongoose": "^8.2.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.3.3",
-        "uuid": "^9.0.1"
+        "uuid": "^9.0.1",
+        "yup": "^1.4.0"
     },
     "scripts": {
         "start": "ts-node src/app.ts",
