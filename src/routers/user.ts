@@ -1,16 +1,14 @@
 import express, { Request, Response } from 'express';
 import { User } from '../models/user';
 import { createNewUser } from '../modules/user/createNewUser';
+import { PostUserInputSchema } from '../schemas/user/PostuserInputSchema';
 
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-
-        // TODO: @willdunk: Auth this user
-        // TODO: @willdunk: Validate this body input
-        await createNewUser(req.body);
-
+        const validatedRequestBody = PostUserInputSchema.validateSync(req.body);
+        await createNewUser(validatedRequestBody);
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
         console.error(error);
