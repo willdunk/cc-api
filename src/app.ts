@@ -1,8 +1,9 @@
-import { connectDB } from './config/db';
+import { connectViaMongoose } from './database/connectViaMongoose';
 import express from 'express';
 import usersRouter from './routers/user';
 import loginRouter from './routers/login';
 import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
 
 declare global {
     namespace Express {
@@ -12,11 +13,11 @@ declare global {
     }
 }
 
-const port = 3000;
-
 const main = async () => {
     try {
-        await connectDB("mongodb://localhost:27017/cc");
+        dotenv.config();
+
+        await connectViaMongoose();
         console.log("MongoDB Connected");
 
         const app = express();
@@ -27,6 +28,8 @@ const main = async () => {
 
         app.use('/users', usersRouter);
         app.use('/login', loginRouter);
+
+        const port = Number(process.env.PORT);
 
         app.listen(port, () => {
             console.log(`Server running on port ${port}`);
