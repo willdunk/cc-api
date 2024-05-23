@@ -1,18 +1,18 @@
 import express, { Request, Response } from 'express';
 import { User } from '../models/user';
 import { createNewUser } from '../modules/user/createNewUser';
-import { PostUserInputSchema } from '../schemas/user/PostUserInputSchema';
+import { postUserInputSchema } from '../schemas/user/postUserInputSchema';
 import { authenticateUser } from '../middlewares/auth';
 import { StatusCodes } from 'http-status-codes';
 import { isDefined } from '../utils/ts/isDefined';
-import { GetUserOutputSchema } from '../schemas/user/GetUserOutputSchema';
+import { getUserOutputSchema } from '../schemas/user/getUserOutputSchema';
 import { filterObject } from '../utils/filterObject';
 
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-        const validatedRequestBody = PostUserInputSchema.validateSync(req.body);
+        const validatedRequestBody = postUserInputSchema.validateSync(req.body);
         await createNewUser(validatedRequestBody);
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
@@ -32,7 +32,7 @@ router.get('/', authenticateUser, async (req: Request, res: Response) => {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
         }
 
-        res.status(StatusCodes.OK).json(filterObject(user, GetUserOutputSchema));
+        res.status(StatusCodes.OK).json(filterObject(user, getUserOutputSchema));
 
     } catch (error) {
         console.error(error);
