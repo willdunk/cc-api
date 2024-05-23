@@ -27,6 +27,6 @@
     },
     "scripts": {
         "start": "ts-node src/app.ts",
-        "generate": "graphql-codegen"
+        "build": "tsc"
     }
 }

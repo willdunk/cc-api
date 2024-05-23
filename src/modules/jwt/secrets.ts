@@ -1,9 +1,8 @@
 import { TokenType } from "./types"
 
-//TODO: @willdunk: Replace these OMG
 export const secrets = {
-    'accessTokenSecret': 'lol',
-    'refreshTokenSecret': 'lmao'
+    'accessTokenSecret': process.env.JWT_ACCESS_TOKEN_SECRET,
+    'refreshTokenSecret': process.env.JWT_REFRESH_TOKEN_SECRET,
 }
 
 export const secretsMap: { [Key in TokenType]: keyof typeof secrets } = {
