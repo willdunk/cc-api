@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'
-import { PostLoginInputSchema } from '../schemas/login/PostLoginInputSchema';
-import { PostRefreshInputSchema } from '../schemas/login/PostRefreshInputSchema';
+import { postLoginInputSchema } from '../schemas/login/postLoginInputSchema';
+import { postRefreshInputSchema } from '../schemas/login/postRefreshInputSchema';
 import { login } from '../modules/auth/login';
 import { refresh } from '../modules/auth/refresh';
 
@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-        const { email, password } = PostLoginInputSchema.validateSync(req.body);
+        const { email, password } = postLoginInputSchema.validateSync(req.body);
         const newTokens = await login(email, password);
         res.status(StatusCodes.OK).json(newTokens);
     } catch (error) {
@@ -20,7 +20,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.post('/refresh', async (req: Request, res: Response) => {
     try {
-        const { refreshToken } = PostRefreshInputSchema.validateSync(req.body);
+        const { refreshToken } = postRefreshInputSchema.validateSync(req.body);
         const newTokens = await refresh(refreshToken);
         res.status(StatusCodes.OK).json(newTokens);
     } catch (error) {
