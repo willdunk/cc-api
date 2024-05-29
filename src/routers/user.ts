@@ -7,10 +7,11 @@ import { StatusCodes } from 'http-status-codes';
 import { isDefined } from '../utils/ts/isDefined';
 import { getUserOutputSchema } from '../schemas/user/getUserOutputSchema';
 import { filterObject } from '../utils/filterObject';
+import asyncHandler from 'express-async-handler';
 
 const router = express.Router();
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', asyncHandler(async (req: Request, res: Response) => {
     try {
         const validatedRequestBody = postUserInputSchema.validateSync(req.body);
         await createNewUser(validatedRequestBody);
@@ -19,17 +20,19 @@ router.post('/', async (req: Request, res: Response) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-});
+}));
 
-router.get('/', authenticateUser, async (req: Request, res: Response) => {
+router.get('/', authenticateUser, asyncHandler(async (req: Request, res: Response) => {
     try {
         const userId = req.userId;
         if (!isDefined(userId)) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized to view this user' });
+            res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized to view this user' });
+            return;
         }
         const user = await User.findById(userId).lean().exec();
         if (!isDefined(user)) {
-            return res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
+            res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
+            return;
         }
 
         res.status(StatusCodes.OK).json(filterObject(user, getUserOutputSchema));
@@ -38,6 +41,6 @@ router.get('/', authenticateUser, async (req: Request, res: Response) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-});
+}));
 
 export default router;
