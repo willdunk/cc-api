@@ -4,6 +4,7 @@ import usersRouter from './routers/user';
 import loginRouter from './routers/login';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 declare global {
     namespace Express {
@@ -22,6 +23,8 @@ const main = async () => {
 
         const app = express();
         console.log("Created express app");
+
+        app.use(cors());
 
         let jsonParser = bodyParser.json();
         app.use(jsonParser);
