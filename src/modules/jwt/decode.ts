@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { isJWTBody, type JWTBody, type TokenType } from './types';
-import { secrets, secretsMap } from './secrets';
+import { secretsMap } from './secrets';
 import { isDefined } from '../../utils/ts/isDefined';
 
 export const decode = (token: string, tokenType: TokenType): JWTBody => {
-    const secret = secrets[secretsMap[tokenType]];
+    const secret = secretsMap(tokenType);
     if (!isDefined(secret)) {
         throw new Error("Cannot find jwt secret key");
     }
