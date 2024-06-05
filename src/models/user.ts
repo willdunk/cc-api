@@ -6,6 +6,7 @@ const COLLECTION_NAME = 'user';
 export type RefreshToken = {
     refreshTokenHash: string;
     expiresOn: Date;
+    invalid?: boolean;
 }
 
 const refreshTokenSchema = new Schema<RefreshToken>({
@@ -16,6 +17,9 @@ const refreshTokenSchema = new Schema<RefreshToken>({
     expiresOn: {
         type: Date,
         required: true
+    },
+    invalid: {
+        type: Boolean,
     }
 })
 
