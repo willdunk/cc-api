@@ -3,6 +3,7 @@ import express from 'express';
 import usersRouter from './routers/user';
 import loginRouter from './routers/login';
 import logoutRouter from './routers/logout';
+import listingsRouter from './routers/listing';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -33,6 +34,7 @@ const main = async () => {
         app.use('/users', usersRouter);
         app.use('/login', loginRouter);
         app.use('/logout', logoutRouter);
+        app.use('/listings', listingsRouter);
 
         const port = Number(process.env.PORT);
 
