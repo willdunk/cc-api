@@ -7,11 +7,12 @@ import listingsRouter from './routers/listing';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 declare global {
     namespace Express {
         interface Request {
-            userId?: string
+            userId?: string;
         }
     }
 }
@@ -21,12 +22,13 @@ const main = async () => {
         dotenv.config();
 
         await connectViaMongoose();
-        console.log("MongoDB Connected");
+        console.log('MongoDB Connected');
 
         const app = express();
-        console.log("Created express app");
+        console.log('Created express app');
 
-        app.use(cors());
+        app.use(cookieParser());
+        app.use(cors({ origin: process.env.FRONTEND_APP_URL, credentials: true }));
 
         let jsonParser = bodyParser.json();
         app.use(jsonParser);
@@ -41,13 +43,12 @@ const main = async () => {
         app.listen(port, () => {
             console.log(`Server running on port ${port}`);
         });
-
     } catch (error) {
         console.log(error);
     }
-}
+};
 
-main().catch(error => {
-    console.error(error)
-    process.exit(1)
+main().catch((error) => {
+    console.error(error);
+    process.exit(1);
 });
