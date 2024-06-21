@@ -12,7 +12,6 @@ router.post(
         try {
             const { email, password } = postLoginInputSchema.validateSync(req.body);
             const newTokens = await login(email, password);
-            console.log(newTokens);
             res.cookie('accessToken', newTokens.accessToken);
             res.cookie('refreshToken', newTokens.refreshToken);
             res.sendStatus(StatusCodes.OK);

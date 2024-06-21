@@ -14,7 +14,7 @@ router.post(
             if (isString(refreshToken)) await logout(refreshToken);
             res.clearCookie('accessToken');
             res.clearCookie('refreshToken');
-            res.status(StatusCodes.OK).send();
+            res.sendStatus(StatusCodes.OK);
         } catch (error) {
             console.error(error);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
