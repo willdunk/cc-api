@@ -25,6 +25,7 @@ router.post(
     }),
 );
 
+// Specifically for looking the authenticated user
 router.get(
     '/',
     authenticateUser,
@@ -44,6 +45,25 @@ router.get(
             }
 
             res.status(StatusCodes.OK).json(filterObject(user, getUserOutputSchema));
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }),
+);
+
+// Specifically for looking up any user's public information
+router.get(
+    '/:userId',
+    asyncHandler(async (req: Request, res: Response) => {
+        try {
+            const userId = req.params.userId;
+            const user = await User.findById(userId).lean().exec();
+            if (!isDefined(user)) {
+                res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
+                return;
+            }
+            res.status(StatusCodes.OK).json(filterObject(user, getUserOutputSchema)); // Ensure that all the fields here are okay for public consumption
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Internal server error' });
