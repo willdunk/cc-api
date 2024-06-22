@@ -3,14 +3,13 @@ import { decode } from '../modules/jwt/decode';
 import { StatusCodes } from 'http-status-codes';
 import { User } from '../models/user';
 import { isDefined } from '../utils/ts/isDefined';
-import { refresh } from '../modules/auth/refresh';
 
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
-    const { accessToken, refreshToken } = req.cookies;
+    const { accessToken } = req.cookies;
 
-    if (isDefined(accessToken) && isDefined(refreshToken)) {
+    if (isDefined(accessToken)) {
         try {
-            const { userId } = decode(accessToken, 'access');
+            const { userId } = decode(accessToken);
             const user = await User.findById(userId);
             if (!isDefined(user)) {
                 return res.sendStatus(StatusCodes.UNAUTHORIZED);
@@ -18,16 +17,7 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
             req.userId = userId;
             next();
         } catch (error) {
-            try {
-                const newTokens = await refresh(refreshToken); // This already does a user lookup
-                const { userId } = decode(newTokens.accessToken, 'access');
-                res.cookie('accessToken', newTokens.accessToken);
-                res.cookie('refreshToken', newTokens.refreshToken);
-                req.userId = userId;
-                next();
-            } catch (error) {
-                return res.sendStatus(StatusCodes.UNAUTHORIZED);
-            }
+            console.error(error);
             return res.sendStatus(StatusCodes.UNAUTHORIZED);
         }
     } else {

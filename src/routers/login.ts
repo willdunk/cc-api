@@ -11,9 +11,11 @@ router.post(
     asyncHandler(async (req: Request, res: Response) => {
         try {
             const { email, password } = postLoginInputSchema.validateSync(req.body);
-            const newTokens = await login(email, password);
-            res.cookie('accessToken', newTokens.accessToken);
-            res.cookie('refreshToken', newTokens.refreshToken);
+            const accessToken = await login(email, password);
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+            });
             res.sendStatus(StatusCodes.OK);
         } catch (error) {
             console.error(error);
