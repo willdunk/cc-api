@@ -11,36 +11,44 @@ import asyncHandler from 'express-async-handler';
 
 const router = express.Router();
 
-router.post('/', asyncHandler(async (req: Request, res: Response) => {
-    try {
-        const validatedRequestBody = postUserInputSchema.validateSync(req.body);
-        await createNewUser(validatedRequestBody);
-        res.status(201).json({ message: 'User created successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-}));
-
-router.get('/', authenticateUser, asyncHandler(async (req: Request, res: Response) => {
-    try {
-        const userId = req.userId;
-        if (!isDefined(userId)) {
-            res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Unauthorized to view this user' });
-            return;
+router.post(
+    '/',
+    asyncHandler(async (req: Request, res: Response) => {
+        try {
+            const validatedRequestBody = postUserInputSchema.validateSync(req.body);
+            await createNewUser(validatedRequestBody);
+            res.status(201).json({ message: 'User created successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
         }
-        const user = await User.findById(userId).lean().exec();
-        if (!isDefined(user)) {
-            res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
-            return;
+    }),
+);
+
+router.get(
+    '/',
+    authenticateUser,
+    asyncHandler(async (req: Request, res: Response) => {
+        try {
+            const userId = req.userId;
+            if (!isDefined(userId)) {
+                res.status(StatusCodes.UNAUTHORIZED).json({
+                    message: 'Unauthorized to view this user',
+                });
+                return;
+            }
+            const user = await User.findById(userId).lean().exec();
+            if (!isDefined(user)) {
+                res.status(StatusCodes.NOT_FOUND).json({ message: 'User not found' });
+                return;
+            }
+
+            res.status(StatusCodes.OK).json(filterObject(user, getUserOutputSchema));
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
         }
-
-        res.status(StatusCodes.OK).json(filterObject(user, getUserOutputSchema));
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-}));
+    }),
+);
 
 export default router;

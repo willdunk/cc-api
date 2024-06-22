@@ -1,9 +1,8 @@
-import { User } from "../../models/user";
+import { User } from '../../models/user';
 import bcrypt from 'bcryptjs';
-import { encodeAndSaveToken } from "../jwt/encodeAndSaveToken";
-import { type Tokens } from "../jwt/types";
+import { encode } from '../jwt/encode';
 
-export const login = async (email: string, password: string): Promise<Tokens> => {
+export const login = async (email: string, password: string): Promise<string> => {
     const user = await User.findOne({ email });
     if (!user) {
         throw new Error('User not found');
@@ -14,5 +13,5 @@ export const login = async (email: string, password: string): Promise<Tokens> =>
         throw new Error('Invalid credentials');
     }
 
-    return await encodeAndSaveToken(user._id);
-}
+    return await encode(user._id);
+};

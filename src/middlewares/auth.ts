@@ -5,12 +5,11 @@ import { User } from '../models/user';
 import { isDefined } from '../utils/ts/isDefined';
 
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+    const { accessToken } = req.cookies;
 
-    if (authHeader) {
+    if (isDefined(accessToken)) {
         try {
-            const token = authHeader.split(' ')[1];
-            const { userId } = decode(token, "access");
+            const { userId } = decode(accessToken);
             const user = await User.findById(userId);
             if (!isDefined(user)) {
                 return res.sendStatus(StatusCodes.UNAUTHORIZED);
@@ -18,11 +17,10 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
             req.userId = userId;
             next();
         } catch (error) {
-            console.log(error);
-            res.sendStatus(StatusCodes.UNAUTHORIZED);
+            console.error(error);
+            return res.sendStatus(StatusCodes.UNAUTHORIZED);
         }
-
     } else {
-        res.sendStatus(StatusCodes.UNAUTHORIZED);
+        return res.sendStatus(StatusCodes.UNAUTHORIZED);
     }
 };

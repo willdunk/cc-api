@@ -1,2 +1,1 @@
-export const REFRESH_DAYS_EXPIRATION = 30;
-export const ACCESS_MINUTES_EXPIRATION = 15;
+export const ACCESS_DAYS_EXPIRATION = 7;
